@@ -1,20 +1,34 @@
 <script>
+    import {authHandlers} from "../store/store";
+
     let email = '';
     let password = '';
     let confirmPass = '';
     let error = false;
     let register = false;
+    let authenticating = true;
 
-    function handleAunthenticate() {
-        if (!email || !password || (register && !confirmPass)) {
-            error = true;
-            return
-        }
+    async function handleAunthenticate() {
+        // authenticating = true;
+        // if (!email || !password || (register && !confirmPass)) {
+        //     error = true;
+        //     return
+        // }
+        // try {
+        //     if (!register) {
+        //         await authHandlers.login(email, password);
+        //     } else {
+        //         await authHandlers.signup(email, password);
+        //     }
+        // }
+        // catch (error) {
+        //     console.log("Auth error");
+        //     error = true;
+        // }
     }
 
     function handleRegister() {
         register = !register;
-
     }
 </script>
 
@@ -38,7 +52,12 @@
             <input bind:value = {confirmPass} type="password" placeholder = "Confirm Password">
         </label>
         {/if}
-        <button type = "button">Submit</button>
+        <button type = "button">
+            {#if authenticating}
+                <i class="fa-solid fa-spinner spin"></i>
+            {:else}
+            Submit
+            {/if} </button>
     </form>
     <div class = "options">
         <p>Or</p>
@@ -121,6 +140,8 @@
         border-radius: 5px;
         cursor: pointer;
         font-size: 1rem;
+        display: grid;
+        place-items: center;
     }
 
     form button:hover {
@@ -204,5 +225,18 @@
     .options div p:last-of-type {
         color: cyan;
         cursor: pointer;
+    }
+
+    .spin {
+        animation: spin 2s infinite;
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
     }
 </style>

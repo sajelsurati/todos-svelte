@@ -10,26 +10,52 @@
         todoList = [...todoList,currTodo];
         currTodo = "";
     }
+
+    function editTodo(index) {
+        let newTodoList = todoList.filter((val,i) => {
+            return i !== index;
+        });
+        currTodo = todoList[index];
+        todoList = newTodoList;
+    }
+
+    function removeTodo(index) {
+        let newTodoList = todoList.filter((val,i) => {
+            return i !== index;
+        });
+        todoList = newTodoList;
+    }
 </script>
 
 <div class = "mainContainer">
     <div class = "headerContainer">
         <h1>Todo List</h1>
-        <button>
-            <i class="fa-regular fa-floppy-disk"/>
-            <p>Save</p>
-        </button>
+        <div class = "headerButtons">
+            <button>
+                <i class="fa-regular fa-floppy-disk"/>
+                <p>Save</p>
+            </button>
+
+            <button>
+                <i class="fa-solid fa-right-from-bracket"/>
+                <p>Logout</p>
+            </button>
+        </div>
     </div>
 
     <main>
+        {#if todoList.length == 0}
+            <p>You have nothing to do</p>
+        {/if}
         {#each todoList as todo, index}
         <div class = "todo">
             <p>
                 {index+1}. {todo}
             </p>
             <div class = "actions">
-                <i class="fa-regular fa-pen-to-square"/>
-                <i class="fa-regular fa-trash-can"/>
+                <i on:click = {() => {editTodo(index)}} on:keydown = {() => {}}
+                    class="fa-regular fa-pen-to-square"/>
+                <i on:click = {() => {removeTodo(index)}} on:keydown = {() => {}} class="fa-regular fa-trash-can"/>
             </div>
         </div>
         {/each}
@@ -79,6 +105,11 @@
         cursor: pointer;
     }
 
+    .headerButtons {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
     main {
         display: flex;
         flex-direction: column;
