@@ -1,30 +1,33 @@
 <script>
-    import {authHandlers} from "../store/store";
+    import {authHandlers} from "../../store/store";
 
     let email = '';
     let password = '';
     let confirmPass = '';
     let error = false;
     let register = false;
-    let authenticating = true;
+    let authenticating = false;
 
     async function handleAunthenticate() {
-        // authenticating = true;
-        // if (!email || !password || (register && !confirmPass)) {
-        //     error = true;
-        //     return
-        // }
-        // try {
-        //     if (!register) {
-        //         await authHandlers.login(email, password);
-        //     } else {
-        //         await authHandlers.signup(email, password);
-        //     }
-        // }
-        // catch (error) {
-        //     console.log("Auth error");
-        //     error = true;
-        // }
+        if (authenticating) {
+            return;
+        }
+        if (!email || !password || (register && !confirmPass)) {
+            error = true;
+            return
+        }
+        authenticating = true;
+        try {
+            if (!register) {
+                await authHandlers.login(email, password);
+            } else {
+                await authHandlers.signup(email, password);
+            }
+        }
+        catch (error) {
+            console.log("Auth error");
+            error = true;
+        }
     }
 
     function handleRegister() {
@@ -52,7 +55,7 @@
             <input bind:value = {confirmPass} type="password" placeholder = "Confirm Password">
         </label>
         {/if}
-        <button type = "button">
+        <button on:click = {handleAunthenticate} type = "button">
             {#if authenticating}
                 <i class="fa-solid fa-spinner spin"></i>
             {:else}
@@ -176,6 +179,7 @@
 
     .error {
         color: coral;
+        text-align: center;
         font-size : 0.9rem;
     }
 
