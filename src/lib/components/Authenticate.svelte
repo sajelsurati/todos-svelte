@@ -21,12 +21,14 @@
             if (!register) {
                 await authHandlers.login(email, password);
             } else {
+                console.log(email, password);
                 await authHandlers.signup(email, password);
             }
         }
         catch (error) {
             console.log("Auth error");
             error = true;
+            authenticating = false;
         }
     }
 

@@ -1,7 +1,14 @@
 <script>
+    import { doc, setDoc } from "firebase/firestore";
+    import { authHandlers, authStore } from "../../store/store";
+    import { db, auth } from "../../lib/firebase/firebase";
     let todoList = ['Do the groceries'];
     let currTodo = "";
     let error = false;
+
+    authStore.subscribe(curr => {
+        todoList = curr.data.todos;
+    })
     function addTodo() {
         error = false;
         if (!currTodo) {
@@ -25,18 +32,35 @@
         });
         todoList = newTodoList;
     }
+
+    async function saveTodos() {
+        try {
+            const userRef = doc(db, 'user', $authStore.user.uid);
+            console.log("Here")
+            await setDoc(userRef, {
+                todos: todoList,
+                }, 
+                {merge: true}
+            );
+            console.log("here2")
+        } catch (e) {
+            console.log("There was an error saving your information")
+        }
+    }
 </script>
 
+{#if !$authStore.loading}
+    
 <div class = "mainContainer">
     <div class = "headerContainer">
         <h1>Todo List</h1>
         <div class = "headerButtons">
-            <button>
+            <button on:click = {saveTodos}>
                 <i class="fa-regular fa-floppy-disk"/>
                 <p>Save</p>
             </button>
 
-            <button>
+            <button on:click = {authHandlers.logout}>
                 <i class="fa-solid fa-right-from-bracket"/>
                 <p>Logout</p>
             </button>
@@ -65,7 +89,7 @@
         <button on:click = {addTodo}>ADD</button>
     </div>
 </div>
-
+{/if}
 <style>
     .mainContainer {
         display: flex;

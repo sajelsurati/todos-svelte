@@ -14,7 +14,7 @@
                 return
             }
 
-            if (user && currentPAth === '/') {
+            if (user && currentPath === '/') {
                 window.location.href = '/dashboard';
                 return
             }
@@ -23,7 +23,7 @@
                 return;
             }
             let dataToSetToStore;
-            const docRef = doc(db, 'users', user.uid);
+            const docRef = doc(db, 'user', user.uid);
             const docSnap = await getDoc(docRef);
             if (!docSnap.exists()) {
                 const userRef = doc(db, 'user', user.uid)
